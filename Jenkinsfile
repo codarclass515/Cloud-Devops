@@ -1,36 +1,40 @@
 pipeline {
     agent any
 
-    stages {
-
-        stage('Checkout') {
-            steps {
-                checkout scm
+    environment{
+        Node_env = 'Development'
+    }
+    tools{
+        nodejs 'NodeJS 20.19.0'
+    }
+    stages{
+        stage ('clone repository'){
+            steps{
+            git branch: 'main', url: 'https://github.com/Tunesky34/Jenkins-image.git'
             }
         }
-
-        stage('Install Dependencies') {
-            steps {
+        stage('install dependencies'){
+            steps{
                 sh 'npm install'
             }
-        }
-
-        stage('Run Tests') {
-            steps {
-                sh 'npm test || echo "No tests found"'
+    }
+        stage('run test'){
+            steps{
+                sh 'npm run test'
             }
         }
-
-        stage('Start App') {
-            steps {
-                sh 'node server.js &'
+        stage('build test'){
+            steps{
+                sh 'npm run build'
             }
         }
     }
-
-    post {
-        always {
-            echo "Pipeline completed."
+    post{
+        success {
+            echo 'successful'
         }
-    }
+        failure {
+            echo 'failed'
+        }
+    }   
 }

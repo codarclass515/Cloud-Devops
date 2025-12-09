@@ -51,10 +51,19 @@ stage('Deploy') {
         echo 'Deploying to Netlify...'
         sh '''
             echo "Deploying to Netlify..."
-            netlify deploy --prod --auth=$NETLIFY_AUTH_TOKEN --site="8ed15e86-1640-4c09-9fe9-a46e2eda4e7a"
+
+            if [ ! -d "dist" ]; then
+              echo "❌ Build folder 'dist' not found!"
+              exit 1
+            fi
+
+            netlify deploy --prod \
+              --site=$NETLIFY_SITE_ID \
+              --dir=dist
         '''
     }
 }
+
 
     }
 
